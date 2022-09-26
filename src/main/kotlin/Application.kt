@@ -12,15 +12,11 @@ import routes.taskRoute
 
 import model.Task
 
-
 val client = KMongo.createClient()
 val database = client.getDatabase("taskDb")
 var taskCollection = database.getCollection<Task>("tasks")
 
-
-
 fun main(args : Array<String> ) = EngineMain.main(args)
-
 
 fun Application.init() {
 

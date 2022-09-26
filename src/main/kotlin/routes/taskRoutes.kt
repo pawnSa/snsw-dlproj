@@ -1,6 +1,5 @@
 package routes
 
-
 import com.mongodb.client.MongoCollection
 import io.ktor.http.*
 import io.ktor.server.application.*
