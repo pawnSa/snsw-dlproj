@@ -15,9 +15,10 @@ import kotlinx.serialization.Serializable
 import org.litote.kmongo.*
 import routes.taskRoute
 import model.Task
+import routes.accountRoute
 
 val client = KMongo.createClient()
-val database = client.getDatabase("taskDb")
+val database = client.getDatabase("SNSWDL")
 
 var taskCollection = database.getCollection<Task>("tasks")
 
@@ -60,7 +61,12 @@ fun Application.init() {
 
     routing {
 
-        taskRoute(taskCollection)
+//        taskRoute(taskCollection)
+
+        authenticate {
+            install(RoleBasedAuthorization) { roles = listOf("customer") }
+            accountRoute(database)
+        }
 
     }
 }
