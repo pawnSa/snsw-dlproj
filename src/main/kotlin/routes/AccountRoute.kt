@@ -3,6 +3,7 @@ package routes
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.mongodb.client.MongoDatabase
+import database
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -13,9 +14,10 @@ import org.litote.kmongo.*
 import org.mindrot.jbcrypt.*
 import java.util.*
 
-fun Route.accountRoute (db:MongoDatabase){
+fun Route.accountRoute (database:MongoDatabase){
 
-    val usersCollection = db.getCollection<User>("users")
+//    val usersCollection = db.getCollection<User>("users")
+    val usersCollection = database.getCollection<User>("users")
 
     route("/account"){
 
