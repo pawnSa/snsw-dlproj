@@ -9,7 +9,6 @@ import jdk.jfr.Description
 import kotlinx.serialization.Serializable
 import org.litote.kmongo.*
 import routes.taskRoute
-
 import model.Task
 
 val client = KMongo.createClient()

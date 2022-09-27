@@ -1,7 +1,6 @@
 package routes
 
 import com.mongodb.client.MongoCollection
-import database
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -14,7 +13,6 @@ import org.litote.kmongo.id.toId
 
 fun Route.taskRoute(taskCollection : MongoCollection<Task>){
 
-    var taskCollection = database.getCollection<Task>("tasks")
 
     println(taskCollection.toString())
 
