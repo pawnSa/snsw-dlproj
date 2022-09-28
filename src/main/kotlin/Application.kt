@@ -61,7 +61,7 @@ fun Application.init() {
 
     routing {
 
-//        taskRoute(taskCollection)
+       taskRoute(taskCollection)
 
         authenticate {
             install(RoleBasedAuthorization) { roles = listOf("customer") }

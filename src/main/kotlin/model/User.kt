@@ -11,6 +11,7 @@ data class User(
     val password:String,
     val firstName: String,
     val lastName: String,
+//    val dob:    01011980
     val address: String,
     val phone: Int,
     val roles : List<String> = listOf(),
