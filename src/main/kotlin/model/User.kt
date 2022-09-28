@@ -1,9 +1,11 @@
 package model
 
 import ObjectIdAsStringSerializer
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.litote.kmongo.Id
 import org.litote.kmongo.newId
+import java.util.Date
 
 @Serializable
 data class User(
@@ -11,7 +13,8 @@ data class User(
     val password:String,
     val firstName: String,
     val lastName: String,
-//    val dob:    01011980
+//    @Contextual
+//    val dob: Date,
     val address: String,
     val phone: Int,
     val roles : List<String> = listOf(),

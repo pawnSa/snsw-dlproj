@@ -8,6 +8,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import jdk.jfr.Description
@@ -15,12 +16,16 @@ import kotlinx.serialization.Serializable
 import org.litote.kmongo.*
 import routes.taskRoute
 import model.Task
+import model.User
+import org.mindrot.jbcrypt.BCrypt
 import routes.accountRoute
+
 
 val client = KMongo.createClient()
 val database = client.getDatabase("SNSWDL")
 
 var taskCollection = database.getCollection<Task>("tasks")
+val usersCollection = database.getCollection<User>("users")
 
 fun main(args : Array<String> ) = EngineMain.main(args)
 
@@ -60,12 +65,23 @@ fun Application.init() {
     }
 
     routing {
+        route("/account"){
+            post("/register"){
+                val data = call.receive<User>()
+                val hashed = BCrypt.hashpw(data.password, BCrypt.gensalt())
+                val user = User(data.username, password = hashed, data.firstName, data.lastName,
+                    data.address, data.phone ,roles = listOf("customer"))
+                usersCollection.insertOne(user)
+                call.respond(HttpStatusCode.Created)
+            }
+        }
+        accountRoute(database)
 
        taskRoute(taskCollection)
 
         authenticate {
             install(RoleBasedAuthorization) { roles = listOf("customer") }
-            accountRoute(database)
+//            accountRoute(database)
         }
 
     }

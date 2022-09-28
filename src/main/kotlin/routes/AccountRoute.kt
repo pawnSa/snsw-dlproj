@@ -9,6 +9,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import model.LoginRequest
 import model.Task
 import model.User
 import org.bson.types.ObjectId
@@ -33,6 +34,19 @@ fun Route.accountRoute (database:MongoDatabase){
             }
             else{
                 call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        get("/search/{username}"){
+
+            var username = call.parameters["username"].toString()
+            var filter = "{username:'$username'}"
+            var user = usersCollection.findOne(filter);
+            if(user != null){
+                return@get call.respond(user)
+            }
+            else {
+                return@get call.respond(HttpStatusCode.NotFound)
             }
         }
 
@@ -67,17 +81,17 @@ fun Route.accountRoute (database:MongoDatabase){
         }
 
 
-        post("/register"){
-            val data = call.receive<User>()
-            val hashed = BCrypt.hashpw(data.password,BCrypt.gensalt())
-            val user = User(data.username, password = hashed, data.firstName, data.lastName,
-                data.address, data.phone ,roles = listOf("customer"))
-            usersCollection.insertOne(user)
-            call.respond(HttpStatusCode.Created)
-        }
+//        post("/register"){
+//            val data = call.receive<User>()
+//            val hashed = BCrypt.hashpw(data.password,BCrypt.gensalt())
+//            val user = User(data.username, password = hashed, data.firstName, data.lastName,
+//                data.address, data.phone ,roles = listOf("customer"))
+//            usersCollection.insertOne(user)
+//            call.respond(HttpStatusCode.Created)
+//        }
 
         post("/login"){
-            val data = call.receive<User>()
+            val data = call.receive<LoginRequest>()
 
             val filter = "{username:/^${data.username}$/i}"
             val user = usersCollection.findOne(filter)
@@ -94,6 +108,7 @@ fun Route.accountRoute (database:MongoDatabase){
                 .withAudience("http://localhost:8080")
                 .withIssuer("http://localhost:8080")
                 .withClaim("username",user?.username)
+//                .withClaim("password",user?.password)
                 .withClaim("firstName", user?.firstName)
                 .withClaim("lastNane", user?.lastName)
                 .withClaim("address",user?.address)
