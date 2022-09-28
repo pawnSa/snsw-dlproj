@@ -19,16 +19,14 @@ import model.Task
 import model.User
 import org.mindrot.jbcrypt.BCrypt
 import routes.accountRoute
-
+import routes.noneAuthAccountRoute
 
 val client = KMongo.createClient()
 val database = client.getDatabase("SNSWDL")
-
 var taskCollection = database.getCollection<Task>("tasks")
 val usersCollection = database.getCollection<User>("users")
 
 fun main(args : Array<String> ) = EngineMain.main(args)
-
 fun Application.init() {
 
     install(ContentNegotiation){
@@ -65,23 +63,15 @@ fun Application.init() {
     }
 
     routing {
-        route("/account"){
-            post("/register"){
-                val data = call.receive<User>()
-                val hashed = BCrypt.hashpw(data.password, BCrypt.gensalt())
-                val user = User(data.username, password = hashed, data.firstName, data.lastName,
-                    data.address, data.phone ,roles = listOf("customer"))
-                usersCollection.insertOne(user)
-                call.respond(HttpStatusCode.Created)
-            }
-        }
-        accountRoute(database)
 
-       taskRoute(taskCollection)
+//          accountRoute(database)
+//          None Authenticated routes
+      noneAuthAccountRoute(database)
+      taskRoute(taskCollection)
 
         authenticate {
+            accountRoute(database)
             install(RoleBasedAuthorization) { roles = listOf("customer") }
-//            accountRoute(database)
         }
 
     }

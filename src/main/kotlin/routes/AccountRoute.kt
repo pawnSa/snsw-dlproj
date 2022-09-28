@@ -16,11 +16,11 @@ import org.bson.types.ObjectId
 import org.litote.kmongo.*
 import org.litote.kmongo.id.toId
 import org.mindrot.jbcrypt.*
+import usersCollection
 import java.util.*
 
+//val usersCollection = database.getCollection<User>("users")
 fun Route.accountRoute (database:MongoDatabase){
-
-    val usersCollection = database.getCollection<User>("users")
 
     route("/account"){
 
@@ -90,6 +90,7 @@ fun Route.accountRoute (database:MongoDatabase){
 //            call.respond(HttpStatusCode.Created)
 //        }
 
+        /*
         post("/login"){
             val data = call.receive<LoginRequest>()
 
@@ -119,5 +120,7 @@ fun Route.accountRoute (database:MongoDatabase){
 
             return@post call.respond(token)
         }
+
+         */
     }
 }
