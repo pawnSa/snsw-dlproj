@@ -4,7 +4,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 
-val RoleBasedAuthorization = createRouteScopedPlugin(name = "RoleBasedAuthorization", createConfiguration = ::PluginConfiguration) {
+val RoleBasedAuthorization = createRouteScopedPlugin(name = "RoleBasedAuthorization",
+    createConfiguration = ::PluginConfiguration) {
     pluginConfig.apply {
         on(AuthenticationChecked) { call ->
             val principal = call.principal<JWTPrincipal>()

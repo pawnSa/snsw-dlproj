@@ -6,6 +6,8 @@ import com.mongodb.client.MongoDatabase
 import database
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -24,6 +26,65 @@ fun Route.accountRoute (database:MongoDatabase){
 
     route("/account"){
 
+        ////////////    TRY THIS PUT  /// Update with ID
+        put("/{id}"){
+
+            val data = call.receive<User>()
+            val principal = call.principal<JWTPrincipal>()
+            val username = principal?.payload?.getClaim("username").toString().replace("\"","")
+
+            var filter = "{username:'$username'}"
+            var user = usersCollection.findOne(filter);
+
+            val clone = user?.copy(address=data.address,phone = data.phone)
+
+            if(clone != null){
+                usersCollection.updateOne(clone)
+                return@put call.respond(HttpStatusCode.OK,clone)
+            }
+
+            return@put call.respond(HttpStatusCode.NotFound)
+
+        }
+
+        /////// Update with /me directory. Meaning same directory as user area. See get() method below
+
+        put("/me"){
+
+            val data = call.receive<User>()
+            val principal = call.principal<JWTPrincipal>()
+            val username = principal?.payload?.getClaim("username").toString().replace("\"","")
+
+            var filter = "{username:'$username'}"
+            var user = usersCollection.findOne(filter);
+
+            val clone = user?.copy(address=data.address,phone = data.phone)
+
+            if(clone != null){
+                usersCollection.updateOne(clone)
+
+                return@put call.respond(HttpStatusCode.OK,clone)
+            }
+
+            return@put call.respond(HttpStatusCode.NotFound)
+
+        }
+        /////////
+//        put("/{id}"){
+//
+//            val id = call.parameters["id"].toString()
+//            val user = call.receive<User>();
+//
+//            usersCollection.updateOne(user)
+//            call.respond(HttpStatusCode.OK,user)
+//        }
+        /////////
+
+//
+//        get("/loggedinuser"){
+//
+//        }
+
         get("/{id}"){
             val idParam = call.parameters["id"].toString()
             val id : Id<User> = ObjectId(idParam).toId()
@@ -37,9 +98,11 @@ fun Route.accountRoute (database:MongoDatabase){
             }
         }
 
-        get("/search/{username}"){
+        get("/me"){
 
-            var username = call.parameters["username"].toString()
+            val principal = call.principal<JWTPrincipal>()
+            val username = principal?.payload?.claims?.get("username").toString().replace("\"","")
+
             var filter = "{username:'$username'}"
             var user = usersCollection.findOne(filter);
             if(user != null){
@@ -65,21 +128,6 @@ fun Route.accountRoute (database:MongoDatabase){
 //            }
 //        }
 //        }
-
-
-
-        /////////
-
-        put("/{id}"){
-
-            val id = call.parameters["id"].toString()
-            val user = call.receive<User>();
-
-            usersCollection.updateOne(user)
-            call.respond(HttpStatusCode.OK,user)
-
-        }
-
 
 //        post("/register"){
 //            val data = call.receive<User>()
