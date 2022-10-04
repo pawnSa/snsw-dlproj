@@ -1,11 +1,9 @@
 package model
 
 import ObjectIdAsStringSerializer
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.litote.kmongo.Id
 import org.litote.kmongo.newId
-import java.util.Date
 
 @Serializable
 data class User(
@@ -22,6 +20,7 @@ data class User(
     val licenseIssueDate:String= "N/A",
     val licenseExpiryDate:String= "N/A",
     val roles : List<String> = listOf(),
+    val logbookHours: List<DrivingHours> = mutableListOf(),
     @Serializable(with = ObjectIdAsStringSerializer::class)
     val _id: Id<User> = newId()
 )

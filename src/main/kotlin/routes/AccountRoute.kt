@@ -11,6 +11,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import model.DrivingHours
 import model.LoginRequest
 import model.Task
 import model.User
@@ -36,7 +37,7 @@ fun Route.accountRoute (database:MongoDatabase){
             var filter = "{username:'$username'}"
             var user = usersCollection.findOne(filter);
 
-            val clone = user?.copy(address=data.address,phone = data.phone)
+            val clone = user?.copy(logbookHours = data.logbookHours)
 
             if(clone != null){
                 usersCollection.updateOne(clone)

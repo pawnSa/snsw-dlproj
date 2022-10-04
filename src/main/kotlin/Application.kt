@@ -13,18 +13,21 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import jdk.jfr.Description
 import kotlinx.serialization.Serializable
+import model.DrivingHours
 import org.litote.kmongo.*
 import routes.taskRoute
 import model.Task
 import model.User
 import org.mindrot.jbcrypt.BCrypt
 import routes.accountRoute
+import routes.drivingHoursRoute
 import routes.noneAuthAccountRoute
 
 val client = KMongo.createClient()
 val database = client.getDatabase("SNSWDL")
 var taskCollection = database.getCollection<Task>("tasks")
 val usersCollection = database.getCollection<User>("users")
+var drivingHoursCollection = database.getCollection<DrivingHours>("drivinghours")
 
 fun main(args : Array<String> ) = EngineMain.main(args)
 fun Application.init() {
@@ -71,6 +74,7 @@ fun Application.init() {
 
         authenticate {
             accountRoute(database)
+            drivingHoursRoute(drivingHoursCollection)
             install(RoleBasedAuthorization) { roles = listOf("customer") }
         }
 
