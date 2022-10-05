@@ -12,5 +12,6 @@ data class DrivingHours (
     val endTime: String,
     val travelTime: Double,
     val instructor: Boolean,
+    val nightHours: Boolean,
     @Serializable(with = ObjectIdAsStringSerializer::class) val _id: Id<DrivingHours> = newId()
    )
