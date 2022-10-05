@@ -20,6 +20,7 @@ import org.litote.kmongo.*
 import model.User
 import org.mindrot.jbcrypt.BCrypt
 import routes.accountRoute
+import routes.adminRoute
 import routes.drivingHoursRoute
 import routes.noneAuthAccountRoute
 
@@ -74,7 +75,9 @@ fun Application.init() {
         authenticate {
             accountRoute(database)
             drivingHoursRoute(drivingHoursCollection)
-            install(RoleBasedAuthorization) { roles = listOf("customer") }
+            adminRoute(database)
+
+
         }
 
     }
