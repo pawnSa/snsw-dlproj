@@ -12,8 +12,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import model.DrivingHours
-import model.LoginRequest
-import model.Task
 import model.User
 import org.bson.types.ObjectId
 import org.litote.kmongo.*
@@ -27,7 +25,19 @@ fun Route.accountRoute (database:MongoDatabase){
 
     route("/account"){
 
-        ////////////    TRY THIS PUT  /// Update with ID
+        post("/logbook-entry"){
+            val entry = call.receive<DrivingHours>()
+            val principal = call.principal<JWTPrincipal>()
+            val userId = principal?.payload?.getClaim("id").toString().replace("\"","")
+            val user = usersCollection.findOne("{_id: ObjectId('$userId')}")
+            if(user != null){
+                user.logbookHours.add(entry)
+                usersCollection.updateOne(user)
+                return@post call.respond(HttpStatusCode.Created,entry)
+            }
+            return@post call.respond(HttpStatusCode.NotFound)
+        }
+
         put("/{id}"){
 
             val data = call.receive<User>()

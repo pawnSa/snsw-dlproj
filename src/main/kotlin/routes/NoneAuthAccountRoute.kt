@@ -88,6 +88,7 @@ fun Route.noneAuthAccountRoute (database: MongoDatabase){
                 .withClaim("licenseIssueDate", user?.licenseIssueDate)
                 .withClaim("licenseExpiryDate", user?.licenseExpiryDate)
                 .withClaim("roles",user?.roles)
+                .withClaim("id", user?._id.toString())
                 .withExpiresAt(expiry)
                 .sign(Algorithm.HMAC256("secret"))
 
