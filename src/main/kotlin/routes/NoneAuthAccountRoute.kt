@@ -25,17 +25,6 @@ fun Route.noneAuthAccountRoute (database: MongoDatabase){
 
     route("/account"){
 
-        /////////////
-//        put("/{id}"){
-//
-//            val id = call.parameters["id"].toString()
-//            val user = call.receive<User>();
-//
-//            usersCollection.updateOne(user)
-//            call.respond(HttpStatusCode.OK,user)
-//
-//        }
-
         get("/search/{username}"){
 
             var username = call.parameters["username"].toString()
@@ -62,10 +51,8 @@ fun Route.noneAuthAccountRoute (database: MongoDatabase){
 
         post("/login"){
             val data = call.receive<LoginRequest>()
-
             val filter = "{username:/^${data.username}$/i}"
             val user = usersCollection.findOne(filter)
-
             if(user == null){
                 return@post call.respond(HttpStatusCode.BadRequest)
             }

@@ -30,13 +30,6 @@ fun Route.drivingHoursRoute(drivingHoursCollection : MongoCollection<DrivingHour
                 call.respond(HttpStatusCode.NotFound)
             }
         }
-//    get("/byClientId/{clientId}"){
-//        val clientId = call.parameters["clientId"].toString()
-//        val filter = "{clientId:ObjectId('$clientId')}"
-//        val data = patients.find(filter).toList()
-//        call.respond(data)
-//    }
-
         post("/getByIds") {
             val ids = call.receive<List<String>>()
             val wrappedIds = ids.map { id -> "ObjectId('$id')" }
@@ -46,8 +39,7 @@ fun Route.drivingHoursRoute(drivingHoursCollection : MongoCollection<DrivingHour
             call.respond(entities)
         }
         post {
-            val entity =
-                call.receive<DrivingHours>() // if the json in the request can't be turned into a patient, there will be an error
+            val entity = call.receive<DrivingHours>()
             drivingHoursCollection.insertOne(entity)
             call.respond(HttpStatusCode.Created, entity)
         }

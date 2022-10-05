@@ -17,13 +17,6 @@ fun Route.adminRoute (database: MongoDatabase) {
 
         install(RoleBasedAuthorization) { roles = listOf("admin","customer") }
 
-//        post{
-//            val data = call.receive<LearnerLicence>()
-//            val email = call.principal<JWTPrincipal>()?.getEmail()
-//            val licence = data.copy(issuedBy =  email!!)
-//            licenceCollection.insertOne(licence)
-//            call.respond(HttpStatusCode.Created,licence);
-//        }
         get("/me") {
 
             val principal = call.principal<JWTPrincipal>()

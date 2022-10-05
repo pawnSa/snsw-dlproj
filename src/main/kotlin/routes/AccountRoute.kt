@@ -4,8 +4,6 @@ import RoleBasedAuthorization
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.mongodb.client.MongoDatabase
-import database
-import getEmail
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -63,18 +61,13 @@ fun Route.accountRoute (database:MongoDatabase) {
             val data = call.receive<User>()
             val principal = call.principal<JWTPrincipal>()
             val username = principal?.payload?.getClaim("username").toString().replace("\"", "")
-
             var filter = "{username:'$username'}"
             var user = usersCollection.findOne(filter);
-
             val clone = user?.copy(address = data.address, phone = data.phone)
-
             if (clone != null) {
                 usersCollection.updateOne(clone)
-
                 return@put call.respond(HttpStatusCode.OK, clone)
             }
-
             return@put call.respond(HttpStatusCode.NotFound)
 
         }
