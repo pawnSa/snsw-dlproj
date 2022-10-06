@@ -43,7 +43,7 @@ fun Route.adminRoute (database: MongoDatabase) {
         }
 
         get {
-            val data = usersCollection.find().toList()
+            val data = usersCollection.find().toList().filter{"admin" !in it.roles}
             call.respond(data)
         }
     }
